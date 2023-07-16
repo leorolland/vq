@@ -11,18 +11,13 @@ import (
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-	count := 0
 	for scanner.Scan() {
-		count += 1
-
-		lineParser := vq.NewLineParser()
-
-		line, err := parser.Parse(lineParser.LineParser, scanner.Text())
+		things, err := parser.Parse(vq.Anythings(), scanner.Text())
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Printf("%d: line: %s\n", count, line)
+		fmt.Println(things)
 	}
 
 	if scanner.Err() != nil {
