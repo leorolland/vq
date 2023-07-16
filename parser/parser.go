@@ -121,14 +121,15 @@ func ConsumeIf(condition func(rune) bool) Parser[Empty] {
 
 // ConsumeWhile returns a Parser which tests each successive in the input with
 // the condition function.  For each rune for which the condition is met, the rune is consumed from
-// the input.  The parser finishes when some rune does not meet the condition.
+// the input.  The parser finishes when some rune does not meet the condition or if there is
+// nothing to consume anymore.
 // The parser always succeeds, even if no runes are met.
 func ConsumeWhile(condition func(r rune) bool) Parser[Empty] {
 	return func(initial state) (Empty, state, error) {
 		current := initial
 		for {
 			r, next := current.nextRune()
-			if !condition(r) {
+			if !condition(r) || next.isOver() {
 				return Empty{}, current, nil
 			}
 			current = next

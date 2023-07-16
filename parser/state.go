@@ -28,3 +28,8 @@ func (s state) nextRune() (rune, state) {
 	r, w := utf8.DecodeRuneInString(s.remaining())
 	return r, s.consume(w)
 }
+
+// isOver returns true if there is nothing to consume anymore
+func (s state) isOver() bool {
+	return s.offset > len(s.data)
+}
