@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -22,7 +23,12 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(things)
+		jsonOutput, err := json.MarshalIndent(things, "", "  ")
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(string(jsonOutput))
 	}
 
 	if scanner.Err() != nil {

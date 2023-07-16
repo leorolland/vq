@@ -1,8 +1,10 @@
 package parsers_test
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/leorolland/vq"
 	"github.com/leorolland/vq/parser"
 	"github.com/leorolland/vq/parsers"
 )
@@ -39,19 +41,19 @@ func TestTextSuccess(t *testing.T) {
 
 	testCases := map[string]struct {
 		input    string
-		expected string
+		expected vq.Node
 	}{
 		"ascii": {
 			input:    "foo",
-			expected: "foo",
+			expected: vq.Node{Kind: vq.Text, Value: "foo"},
 		},
 		"ascii with space": {
 			input:    "foo bar",
-			expected: "foo bar",
+			expected: vq.Node{Kind: vq.Text, Value: "foo bar"},
 		},
 		"ascii with space and unicode": {
 			input:    "丒专	且 é",
-			expected: "丒专	且 é",
+			expected: vq.Node{Kind: vq.Text, Value: "丒专	且 é"},
 		},
 	}
 
@@ -61,7 +63,7 @@ func TestTextSuccess(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if output != tc.expected {
+			if !reflect.DeepEqual(output, tc.expected) {
 				t.Errorf("expected %s, got %s", tc.expected, output)
 			}
 		})
