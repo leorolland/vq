@@ -1,4 +1,4 @@
-package vq
+package parsers
 
 import (
 	"fmt"

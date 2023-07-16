@@ -1,4 +1,4 @@
-package vq
+package parsers
 
 import "github.com/leorolland/vq/parser"
 

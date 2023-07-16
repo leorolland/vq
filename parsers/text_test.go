@@ -1,10 +1,10 @@
-package vq_test
+package parsers_test
 
 import (
 	"testing"
 
 	"github.com/leorolland/vq/parser"
-	vq "github.com/leorolland/vq/pkg"
+	"github.com/leorolland/vq/parsers"
 )
 
 func TestTextError(t *testing.T) {
@@ -30,7 +30,7 @@ func TestTextError(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			_, err := parser.Parse(vq.Text(), tc.input)
+			_, err := parser.Parse(parsers.Text(), tc.input)
 			if err != tc.expectedError {
 				t.Errorf("expected %v, got %v", tc.expectedError, err)
 			}
@@ -53,7 +53,7 @@ func TestTextSuccess(t *testing.T) {
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			output, err := parser.Parse(vq.Text(), tc.input)
+			output, err := parser.Parse(parsers.Text(), tc.input)
 			if err != nil {
 				t.FailNow()
 			}

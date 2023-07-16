@@ -6,13 +6,13 @@ import (
 	"os"
 
 	"github.com/leorolland/vq/parser"
-	vq "github.com/leorolland/vq/pkg"
+	"github.com/leorolland/vq/parsers"
 )
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		things, err := parser.Parse(vq.Anythings(), scanner.Text())
+		things, err := parser.Parse(parsers.Anythings(), scanner.Text())
 		if err != nil {
 			panic(err)
 		}
