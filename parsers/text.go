@@ -2,10 +2,10 @@ package parsers
 
 import "github.com/leorolland/vq/parser"
 
-func isAsciiLetter(r rune) bool {
-	return r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z'
+func isNotDelimiter(r rune) bool {
+	return r != '[' && r != ']'
 }
 
 func Text() parser.Parser[string] {
-	return parser.GetString(parser.ConsumeSome(isAsciiLetter))
+	return parser.GetString(parser.ConsumeSome(isNotDelimiter))
 }

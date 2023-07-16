@@ -18,10 +18,6 @@ func TestTextError(t *testing.T) {
 			input:         "",
 			expectedError: parser.ErrNoMatch,
 		},
-		"invalid char": {
-			input:         "~",
-			expectedError: parser.ErrNoMatch,
-		},
 		"brackets": {
 			input:         "foo[]bar",
 			expectedError: parser.ErrUnconsumedInput,
@@ -49,13 +45,21 @@ func TestTextSuccess(t *testing.T) {
 			input:    "foo",
 			expected: "foo",
 		},
+		"ascii with space": {
+			input:    "foo bar",
+			expected: "foo bar",
+		},
+		"ascii with space and unicode": {
+			input:    "丒专	且 é",
+			expected: "丒专	且 é",
+		},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			output, err := parser.Parse(parsers.Text(), tc.input)
 			if err != nil {
-				t.FailNow()
+				t.Fatal(err)
 			}
 			if output != tc.expected {
 				t.Errorf("expected %s, got %s", tc.expected, output)

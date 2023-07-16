@@ -129,7 +129,7 @@ func ConsumeWhile(condition func(r rune) bool) Parser[Empty] {
 		current := initial
 		for {
 			r, next := current.nextRune()
-			if !condition(r) || next.isOver() {
+			if !condition(r) || current.isOver() {
 				return Empty{}, current, nil
 			}
 			current = next
@@ -163,6 +163,9 @@ func Exactly(token string) Parser[Empty] {
 // succeeds; on success it returns the slice of the input string matched by parser.
 func GetString[T any](parser Parser[T]) Parser[string] {
 	return func(initial state) (string, state, error) {
+		if initial.isOver() {
+			return "", initial, ErrNoMatch
+		}
 		start := initial.offset
 		_, next, err := parser(initial)
 		if err != nil {

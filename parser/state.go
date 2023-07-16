@@ -31,5 +31,5 @@ func (s state) nextRune() (rune, state) {
 
 // isOver returns true if there is nothing to consume anymore
 func (s state) isOver() bool {
-	return s.offset > len(s.data)
+	return s.offset == len(s.data)
 }
