@@ -4,7 +4,7 @@ import (
 	"github.com/leorolland/vq/parser"
 )
 
-func Anythings() parser.Parser[[]string] {
+func Anythings(recursion int) parser.Parser[[]string] {
 	type anythingList struct {
 		thing string
 		next  *anythingList
@@ -12,7 +12,7 @@ func Anythings() parser.Parser[[]string] {
 	return parser.Loop(nil,
 		func(things *anythingList) parser.Parser[parser.Step[*anythingList, []string]] {
 			extend := parser.Map(
-				Anything(),
+				Anything(recursion),
 				func(thing string) parser.Step[*anythingList, []string] {
 					return parser.Step[*anythingList, []string]{
 						Accum: &anythingList{thing: thing, next: things},
@@ -27,7 +27,7 @@ func Anythings() parser.Parser[[]string] {
 				if t == nil {
 					break
 				}
-				thingsSlice = append(thingsSlice, t.thing)
+				thingsSlice = append([]string{t.thing}, thingsSlice...)
 				t = t.next
 			}
 

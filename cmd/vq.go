@@ -9,10 +9,15 @@ import (
 	"github.com/leorolland/vq/parsers"
 )
 
+const MAX_RECURSION_LEVEL = 100
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		things, err := parser.Parse(parsers.Anythings(), scanner.Text())
+		things, err := parser.Parse(
+			parsers.Anythings(MAX_RECURSION_LEVEL),
+			scanner.Text(),
+		)
 		if err != nil {
 			panic(err)
 		}

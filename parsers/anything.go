@@ -2,9 +2,9 @@ package parsers
 
 import "github.com/leorolland/vq/parser"
 
-func Anything() parser.Parser[string] {
+func Anything(recursion int) parser.Parser[string] {
 	return parser.OneOf(
-		Brackets(),
+		Brackets(recursion),
 		Text(),
 	)
 }

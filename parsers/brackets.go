@@ -2,6 +2,7 @@ package parsers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/leorolland/vq/parser"
 )
@@ -14,11 +15,24 @@ func isNotCloseBrackets(r rune) bool {
 	return !isCloseBracket(r)
 }
 
-func Brackets() parser.Parser[string] {
+func Brackets(recursion int) parser.Parser[string] {
 	s := parser.StartSkipping(parser.Exactly("["))
-	s1 := parser.AppendKeeping(s, parser.GetString(parser.ConsumeWhile(isNotCloseBrackets)))
+
+	var s1 parser.Parser[parser.Seq[parser.Empty, string]]
+	if recursion == 0 {
+		s1 = parser.AppendKeeping(s, Text())
+	} else {
+		s1 = parser.AppendKeeping(s, parser.Map(
+			Anythings(recursion-1),
+			func(things []string) string {
+				return strings.Join(things, ", ")
+			},
+		))
+	}
+
 	s2 := parser.AppendSkipping(s1, parser.Exactly("]"))
+
 	return parser.Apply(s2, func(inside string) string {
-		return fmt.Sprintf("[%s]", inside)
+		return fmt.Sprintf("Brackets(%s)", inside)
 	})
 }
