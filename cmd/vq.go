@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/leorolland/vq/parser"
@@ -13,7 +14,13 @@ import (
 const MAX_RECURSION_LEVEL = 100
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	end := make(chan bool)
+	go parseAndWrite(os.Stdin, os.Stdout, end)
+	<-end
+}
+
+func parseAndWrite(reader io.Reader, writer io.Writer, end chan bool) {
+	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		things, err := parser.Parse(
 			parsers.Anythings(MAX_RECURSION_LEVEL),
@@ -28,10 +35,12 @@ func main() {
 			panic(err)
 		}
 
-		fmt.Println(string(jsonOutput))
+		fmt.Fprint(writer, string(jsonOutput))
 	}
 
 	if scanner.Err() != nil {
 		panic(scanner.Err().Error())
 	}
+
+	end <- true
 }
